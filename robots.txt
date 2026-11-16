@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://schin178.github.io/stockflow-studio/sitemap.xml

@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StockFlow Studio – Google Sheets Inventory System & Purchase Order Tracker</title>
+<meta name="description" content="Inventory management and purchase-order tracking systems for shops, godowns and small businesses, built in Google Sheets, Apps Script and simple web apps. Live stock balance, low-stock reorder alerts, stock in/out and a 5-step PO flow. Try the free demo.">
+<meta name="keywords" content="google sheets inventory system, inventory management google sheets, stock register, stock in stock out sheet, reorder alert, purchase order tracker, apps script automation, appsheet inventory app, small business inventory, godown stock management, freelancer India">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://schin178.github.io/stockflow-studio/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="StockFlow Studio – Google Sheets Inventory System & Purchase Order Tracker">
+<meta property="og:description" content="Inventory management and purchase-order tracking systems for shops, godowns and small businesses, built in Google Sheets, Apps Script and simple web apps. Live stock balance, low-stock reorder alerts, stock in/out and a 5-step PO flow. Try the free demo.">
+<meta property="og:url" content="https://schin178.github.io/stockflow-studio/">
+<meta property="og:image" content="https://schin178.github.io/stockflow-studio/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "StockFlow Studio", "url": "https://schin178.github.io/stockflow-studio/", "image": "https://schin178.github.io/stockflow-studio/og.png", "description": "Inventory management and purchase-order tracking systems for shops, godowns and small businesses, built in Google Sheets, Apps Script and simple web apps. Live stock balance, low-stock reorder alerts, stock in/out and a 5-step PO flow. Try the free demo.", "founder": {"@type": "Person", "name": "Sachin"}, "areaServed": "Worldwide", "address": {"@type": "PostalAddress", "addressCountry": "IN"}, "sameAs": ["https://www.fiverr.com/skhero178"], "makesOffer": [{"@type": "Offer", "name": "Sheet Cleanup", "price": "15", "priceCurrency": "USD", "url": "https://www.fiverr.com/skhero178"}, {"@type": "Offer", "name": "Inventory Tracker", "price": "45", "priceCurrency": "USD", "url": "https://www.fiverr.com/skhero178"}, {"@type": "Offer", "name": "Full Automated System", "price": "95", "priceCurrency": "USD", "url": "https://www.fiverr.com/skhero178"}]}</script>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: warehouse-tape identity. Sticky glass nav, hero with live app mock, chip marquee, bento features,
+   3-step process, tabbed live demo, pricing, FAQ. Native CSS scroll-driven reveals + View Transitions, no libraries. */
+:root{
+  --bg:#f2f4f7; --surface:#ffffff; --surface-2:#e9edf3; --ink:#111a27; --muted:#556275; --line:#d6dce6;
+  --accent:#e8a317; --accent-ink:#1a1405; --accent-soft:#fdf1d6;
+  --navy:#14243b; --navy-ink:#f3f6fa;
+  --ok:#1d7a46; --ok-soft:#e1f3e8; --warn:#9a5a00; --warn-soft:#fff0d4; --bad:#b42318; --bad-soft:#fde6e4; --info:#245ea8; --info-soft:#e3edf9;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c121c; --surface:#141d2b; --surface-2:#1b2638; --ink:#e8edf4; --muted:#98a5b8; --line:#28344a;
+  --accent:#f2b63c; --accent-ink:#1a1405; --accent-soft:#33270d;
+  --navy:#0a1424; --navy-ink:#f3f6fa;
+  --ok:#62d394; --ok-soft:#14321f; --warn:#f2b45a; --warn-soft:#3a2a10; --bad:#f4877e; --bad-soft:#3d1b19; --info:#86b6f2; --info-soft:#1a2c47; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c121c; --surface:#141d2b; --surface-2:#1b2638; --ink:#e8edf4; --muted:#98a5b8; --line:#28344a;
+  --accent:#f2b63c; --accent-ink:#1a1405; --accent-soft:#33270d;
+  --navy:#0a1424; --navy-ink:#f3f6fa;
+  --ok:#62d394; --ok-soft:#14321f; --warn:#f2b45a; --warn-soft:#3a2a10; --bad:#f4877e; --bad-soft:#3d1b19; --info:#86b6f2; --info-soft:#1a2c47; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:72px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+h1{font-size:clamp(36px,6.4vw,68px);font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-.02em}
+h3{font-size:19px;font-weight:700}
+p{margin:0;max-width:62ch}
+a{color:inherit}
+.eyebrow{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:inline-flex;gap:8px;align-items:center}
+.eyebrow::before{content:"";width:18px;height:6px;background:repeating-linear-gradient(-45deg,var(--accent) 0 4px,var(--ink) 4px 8px);border-radius:2px}
+.muted{color:var(--muted)}
+.sec-head{display:grid;gap:12px;margin-bottom:36px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:var(--accent);color:var(--accent-ink);font:600 15px var(--body);padding:12px 20px;border-radius:10px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:8px}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--line)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){
+  .btn{transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px var(--accent)}
+}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--navy) 88%,transparent);backdrop-filter:blur(10px);color:var(--navy-ink)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px;flex-wrap:wrap}
+.logo{font:800 20px var(--display);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo i{width:26px;height:26px;border-radius:6px;background:repeating-linear-gradient(-45deg,var(--accent) 0 6px,#0000 6px 12px),var(--navy-ink);display:block}
+nav .links{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+nav .links a{text-decoration:none;opacity:.8;font-weight:500}
+nav .links a:hover{opacity:1}
+nav .links .btn{opacity:1;padding:8px 14px;font-size:14px}
+
+/* hero */
+.hero{background:var(--navy);color:var(--navy-ink);position:relative;overflow:hidden;padding-block:72px 96px}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(color-mix(in srgb,var(--navy-ink) 7%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--navy-ink) 7%,transparent) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 70% 80% at 70% 40%,#000 30%,transparent 75%)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero .wrap > *{min-width:0}
+.hero .eyebrow{color:color-mix(in srgb,var(--navy-ink) 70%,transparent)}
+.hero .eyebrow::before{background:repeating-linear-gradient(-45deg,var(--accent) 0 4px,var(--navy-ink) 4px 8px)}
+.hero h1{margin-top:18px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:18px;opacity:.82;margin-top:20px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:36px;font-size:13px;opacity:.85}
+.facts b{display:block;font:700 24px var(--display);color:var(--accent)}
+/* hero mock */
+.mock{background:var(--surface);color:var(--ink);border-radius:16px;box-shadow:0 30px 60px -20px #000a,0 0 0 1px #fff1;overflow:hidden;transform:perspective(1200px) rotateY(-8deg) rotateX(4deg)}
+.mock-top{display:flex;gap:6px;padding:10px 12px;background:var(--surface-2)}
+.mock-top i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.mock-body{padding:16px;display:grid;gap:12px}
+.mock-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mock-kpis div{background:var(--surface-2);border-radius:10px;padding:10px}
+.mock-kpis b{display:block;font:600 22px var(--mono);font-variant-numeric:tabular-nums}
+.mock-kpis span{font-size:11px;color:var(--muted)}
+.mrow{display:grid;grid-template-columns:1fr 90px 56px;gap:10px;align-items:center;font-size:13px}
+.meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:inherit;background:var(--ok)}
+.meter i.warn{background:var(--warn)} .meter i.bad{background:var(--bad)}
+.ticker{font:500 12px var(--mono);border-top:1px dashed var(--line);padding-top:10px;color:var(--muted);min-height:2.6em}
+.ticker b{color:var(--ok)} .ticker b.o{color:var(--bad)}
+@media (prefers-reduced-motion:no-preference){
+  .mock{animation:float 7s ease-in-out infinite}
+  @keyframes float{50%{transform:perspective(1200px) rotateY(-5deg) rotateX(2deg) translateY(-8px)}}
+  .meter i{transition:width .8s cubic-bezier(.2,.8,.2,1)}
+}
+
+/* marquee */
+.marquee{background:var(--accent);color:var(--accent-ink);overflow:hidden;padding-block:12px;font:600 14px var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.marquee .track{display:flex;gap:40px;width:max-content}
+.marquee span::after{content:"◆";margin-left:40px;opacity:.5}
+@media (prefers-reduced-motion:no-preference){.marquee .track{animation:slide 32s linear infinite}@keyframes slide{to{transform:translateX(-50%)}}}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.tile.w3{grid-column:span 3} .tile.w2{grid-column:span 2} .tile.w4{grid-column:span 4}
+.tile.dark{background:var(--navy);color:var(--navy-ink);border-color:transparent}
+.tile.dark .muted{color:color-mix(in srgb,var(--navy-ink) 70%,transparent)}
+.tile .viz{margin-top:8px}
+.spark{width:100%;height:80px;display:block}
+.alerts{display:grid;gap:8px}
+.alert{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:13px}
+.pill{display:inline-block;font:600 12px var(--body);padding:2px 9px;border-radius:99px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.info{background:var(--info-soft);color:var(--info)}
+.big{font:800 54px var(--display);color:var(--accent);line-height:1}
+.phone{width:120px;height:200px;border-radius:20px;border:6px solid var(--ink);margin:4px auto 0;padding:10px 8px;display:grid;gap:6px;align-content:start;background:var(--surface-2)}
+.phone i{height:16px;border-radius:5px;background:var(--surface)} .phone i:nth-child(1){background:var(--accent);height:22px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px var(--mono);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+
+/* steps (real sequence) */
+.process{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.proc{border-top:3px solid var(--ink);padding-top:16px;display:grid;gap:8px;counter-increment:s}
+.proc::before{content:"Step " counter(s);font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* demo */
+.demo-band{background:var(--surface-2)}
+.demo-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.creds{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font:500 13px var(--mono);background:var(--surface);border:1px dashed var(--accent);padding:10px 14px;border-radius:10px}
+.creds b{background:var(--accent-soft);padding:1px 6px;border-radius:4px}
+.app{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px -24px #0005}
+.tabs{display:flex;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{flex:1;min-width:170px;background:none;border:0;border-bottom:3px solid transparent;padding:16px;font:600 15px var(--body);color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{padding:22px}
+.app{view-transition-name:demoapp}
+.login{max-width:360px;margin:28px auto;display:grid;gap:12px}
+label{display:grid;gap:4px;font-size:13px;font-weight:500;color:var(--muted)}
+input,select{font:15px var(--body);padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);width:100%}
+.err{color:var(--bad);font-size:13px;min-height:1em}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi b{display:block;font:600 26px var(--mono);font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.65fr 1fr;gap:18px}
+.grid2 > *{min-width:0}
+#p-fms .grid2{grid-template-columns:1fr}
+#poForm{grid-template-columns:repeat(3,1fr) auto;align-items:end}
+#poForm h3,#poForm .err,#poForm .toast{grid-column:1/-1}
+@media (max-width:700px){#poForm{grid-template-columns:1fr}}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+tr:last-child td{border-bottom:0}
+td .meter{width:80px}
+form.card{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start}
+.seg{display:flex;gap:6px}
+.seg label{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:9px;padding:9px;cursor:pointer;color:var(--ink)}
+.seg label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.seg input{width:auto;accent-color:var(--accent)}
+.log{font:13px var(--mono);display:grid;gap:4px;margin-top:8px;max-height:170px;overflow:auto}
+.in{color:var(--ok)} .out{color:var(--bad)}
+.toast{font-size:13px;color:var(--ok);min-height:1em}
+.steps{display:flex;gap:4px;flex-wrap:nowrap}
+.tile .steps{flex-wrap:wrap}
+.step{font:500 11px var(--mono);padding:2px 6px;border-radius:4px;background:var(--bg);color:var(--muted)}
+.step.done{background:var(--ok-soft);color:var(--ok)} .step.now{background:var(--accent);color:var(--accent-ink)}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+::view-transition-old(demoapp),::view-transition-new(demoapp){animation-duration:.25s}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:12px;grid-template-rows:auto auto 1fr auto}
+.plan.pick{background:var(--navy);color:var(--navy-ink);border-color:transparent;position:relative}
+.plan.pick .muted{color:color-mix(in srgb,var(--navy-ink) 70%,transparent)}
+.plan.pick::before{content:"Most picked";position:absolute;top:-12px;left:24px;background:var(--accent);color:var(--accent-ink);font:600 12px var(--mono);padding:3px 10px;border-radius:99px}
+.price{font:800 44px var(--display);line-height:1}
+.price small{font:500 14px var(--body);opacity:.7}
+.plan ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px}
+.plan li{display:flex;gap:8px}
+.plan li::before{content:"✓";color:var(--accent);font-weight:700}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:780px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+summary{font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font:600 18px var(--mono);color:var(--accent)}
+details[open] summary::after{content:"−"}
+details p{margin-top:10px;color:var(--muted)}
+
+.final{background:var(--navy);color:var(--navy-ink);text-align:center}
+.final .wrap{display:grid;gap:18px;justify-items:center}
+.final p{opacity:.8}
+footer{background:var(--navy);color:color-mix(in srgb,var(--navy-ink) 60%,transparent);font-size:13px;border-top:1px solid #fff1;padding-block:22px}
+
+/* native scroll-driven reveal: elements stay visible, only slide a little */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+    @keyframes rise{from{transform:translateY(28px) scale(.98)}to{transform:none}}
+  }
+}
+
+@media (max-width:900px){
+  .hero .wrap,.grid2,.plans,.process{grid-template-columns:1fr}
+  .bento{grid-template-columns:1fr 1fr}
+  .tile.w3,.tile.w2,.tile.w4{grid-column:span 2}
+  .mock{transform:none}
+  .plan.pick{margin-top:8px}
+}
+@media (max-width:480px){.kpis,.mock-kpis{grid-template-columns:1fr 1fr 1fr}.kpi b{font-size:20px}.tile.w2.half{grid-column:span 2}}
+</style>
+
+<nav><div class="wrap">
+  <a class="logo" href="#top"><i></i>StockFlow Studio</a>
+  <div class="links"><a href="#features">Features</a><a href="#demo">Live demo</a><a href="#pricing">Pricing</a><a class="btn" href="https://www.fiverr.com/skhero178" target="_blank" rel="noopener">Hire on Fiverr</a></div>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <div class="eyebrow">Inventory &amp; work-flow systems</div>
+    <h1>Know your stock. <em>Every box, every day.</em></h1>
+    <p class="lede">I build stock registers, low-stock alerts and purchase-order trackers for shops, godowns and small teams, using Google Sheets, Apps Script and simple web apps. Try a working demo below before you order.</p>
+    <div class="cta"><a class="btn" href="#demo">Open live demo</a><a class="btn ghost" href="#pricing">See packages</a></div>
+    <div class="facts"><div><b>Live</b>stock balance</div><div><b>5-step</b>order tracking</div><div><b>Phone</b>friendly</div></div>
+  </div>
+  <div class="mock" aria-label="Preview of the stock dashboard">
+    <div class="mock-top"><i></i><i></i><i></i></div>
+    <div class="mock-body">
+      <div class="mock-kpis"><div><b id="hItems">6</b><span>Items</span></div><div><b id="hLow">2</b><span>Reorder</span></div><div><b id="hOut">1</b><span>Out</span></div></div>
+      <div id="hRows" style="display:grid;gap:10px"></div>
+      <div class="ticker" id="hTick">Waiting for the next entry…</div>
+    </div>
+  </div>
+</div></header>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="mq"></div></div>
+
+<section id="features"><div class="wrap">
+  <div class="sec-head reveal"><div class="eyebrow">What you get</div><h2>Built for the stock room, not the boardroom</h2>
+    <p class="muted">Plain screens your staff understand on day one. No new software to buy.</p></div>
+  <div class="bento">
+    <div class="tile w4 reveal">
+      <h3>Live stock balance</h3><p class="muted">Every stock in and stock out updates the balance at once. See the last 14 days of movement for any item.</p>
+      <svg class="viz spark" viewBox="0 0 400 80" preserveAspectRatio="none" role="img" aria-label="Stock level over 14 days">
+        <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+        <g stroke="var(--line)" stroke-width="1"><line x1="0" y1="20" x2="400" y2="20"/><line x1="0" y1="50" x2="400" y2="50"/></g>
+        <path d="M0,58 L31,52 L62,55 L92,40 L123,44 L154,30 L185,36 L215,22 L246,28 L277,18 L308,34 L338,26 L369,14 L400,20 L400,80 L0,80Z" fill="url(#g)"/>
+        <path d="M0,58 L31,52 L62,55 L92,40 L123,44 L154,30 L185,36 L215,22 L246,28 L277,18 L308,34 L338,26 L369,14 L400,20" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <circle cx="400" cy="20" r="4" fill="var(--accent)"/>
+      </svg>
+    </div>
+    <div class="tile w2 dark reveal"><div class="big">0</div><h3>surprise stock-outs</h3><p class="muted">Each item has a reorder level. Hit it and the item is flagged before the shelf is empty.</p></div>
+    <div class="tile w3 reveal">
+      <h3>Alerts that name the problem</h3>
+      <div class="alerts viz">
+        <div class="alert">Floor Tile 400×400<span class="pill bad">Out of stock</span></div>
+        <div class="alert">Tile Adhesive 20 kg<span class="pill warn">35 left · reorder at 40</span></div>
+        <div class="alert">PO-1041 · Dispatch<span class="pill bad">1 day late</span></div>
+      </div>
+    </div>
+    <div class="tile w3 reveal">
+      <h3>Purchase orders, step by step</h3><p class="muted">Request, approval, PO sent, dispatched, received. Each step has an owner and a deadline.</p>
+      <div class="steps viz"><span class="step done">Request</span><span class="step done">Approval</span><span class="step now">PO sent</span><span class="step">Dispatched</span><span class="step">Received</span></div>
+    </div>
+    <div class="tile w2 half reveal"><h3>Works on phones</h3><div class="phone" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="tile w2 half reveal"><h3>Auto reports</h3><p class="muted">Apps Script sends a daily stock summary by email, so the owner sees it without opening the sheet.</p></div>
+    <div class="tile w2 reveal"><h3>Tools I use</h3><div class="chips"><span class="chip">Google Sheets</span><span class="chip">Apps Script</span><span class="chip">AppSheet</span><span class="chip">Excel</span><span class="chip">Python</span><span class="chip">Flask</span></div></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><div class="eyebrow">How it works</div><h2>From messy sheet to working system</h2></div>
+  <div class="process">
+    <div class="proc reveal"><h3>Send your sheet</h3><p class="muted">Share your current Excel or Google Sheet, or a sample with dummy data, on Fiverr.</p></div>
+    <div class="proc reveal"><h3>I build and test</h3><p class="muted">I set up stock in/out, alerts and reports, and test them with your real item list.</p></div>
+    <div class="proc reveal"><h3>You get a walkthrough</h3><p class="muted">I show you and your staff how to use it, and fix anything in the revision rounds.</p></div>
+  </div>
+</div></section>
+
+<section id="demo" class="demo-band"><div class="wrap">
+  <div class="demo-head reveal">
+    <div class="sec-head" style="margin:0"><div class="eyebrow">Live demo</div><h2>Test it yourself</h2>
+      <p class="muted">Sample data for a made-up tile shop. Your changes stay in your own browser.</p></div>
+    <div class="creds">Demo login <span>ID <b>demo</b></span><span>Password <b>demo123</b></span><button class="btn sm" id="fill" type="button">Fill for me</button></div>
+  </div>
+
+  <div class="app">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t-ims" aria-selected="true" aria-controls="p-ims">Inventory System</button>
+      <button role="tab" id="t-fms" aria-selected="false" aria-controls="p-fms">Work Flow (FMS)</button>
+    </div>
+
+    <form class="login pane" id="login">
+      <h3>Sign in to the demo</h3>
+      <label for="u">User ID<input id="u" autocomplete="off" placeholder="demo"></label>
+      <label for="pw">Password<input id="pw" type="password" autocomplete="off" placeholder="demo123"></label>
+      <div class="err" id="loginErr"></div>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+
+    <div class="pane" id="p-ims" role="tabpanel" aria-labelledby="t-ims" hidden>
+      <div class="bar"><h3>Stock register</h3><div style="display:flex;gap:8px"><button class="btn line sm" data-reset type="button">Reset demo</button><button class="btn line sm" data-logout type="button">Sign out</button></div></div>
+      <div class="kpis">
+        <div class="kpi"><b id="kItems">0</b><span>Items tracked</span></div>
+        <div class="kpi"><b id="kLow">0</b><span>Need reorder</span></div>
+        <div class="kpi"><b id="kOut">0</b><span>Out of stock</span></div>
+      </div>
+      <div class="grid2">
+        <div class="tablebox"><table>
+          <thead><tr><th>Item</th><th style="text-align:right">In stock</th><th>Level</th><th style="text-align:right">Reorder at</th><th>Status</th></tr></thead>
+          <tbody id="stockBody"></tbody>
+        </table></div>
+        <form class="card" id="moveForm">
+          <h3>Stock in / out</h3>
+          <label for="mItem">Item<select id="mItem"></select></label>
+          <div class="seg" role="radiogroup" aria-label="Direction">
+            <label><input type="radio" name="dir" value="in" checked> Stock in</label>
+            <label><input type="radio" name="dir" value="out"> Stock out</label>
+          </div>
+          <label for="mQty">Quantity<input id="mQty" type="number" min="1" step="1" value="10" inputmode="numeric"></label>
+          <div class="err" id="moveErr"></div>
+          <button class="btn" type="submit">Save entry</button>
+          <div class="toast" id="moveOk"></div>
+          <div><b style="font-size:13px">Recent entries</b><div class="log" id="moveLog"></div></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="pane" id="p-fms" role="tabpanel" aria-labelledby="t-fms" hidden>
+      <div class="bar"><h3>Purchase order flow</h3><div style="display:flex;gap:8px"><button class="btn line sm" data-reset type="button">Reset demo</button><button class="btn line sm" data-logout type="button">Sign out</button></div></div>
+      <div class="kpis">
+        <div class="kpi"><b id="fOpen">0</b><span>Open orders</span></div>
+        <div class="kpi"><b id="fLate">0</b><span>Late steps</span></div>
+        <div class="kpi"><b id="fDone">0</b><span>Completed</span></div>
+      </div>
+      <div class="grid2">
+        <div class="tablebox"><table>
+          <thead><tr><th>Order</th><th>Supplier</th><th>Progress</th><th>Due</th><th></th></tr></thead>
+          <tbody id="poBody"></tbody>
+        </table></div>
+        <form class="card" id="poForm">
+          <h3>New purchase request</h3>
+          <label for="poItem">Item<select id="poItem"></select></label>
+          <label for="poQty">Quantity<input id="poQty" type="number" min="1" step="1" value="100" inputmode="numeric"></label>
+          <label for="poSup">Supplier<select id="poSup"><option>Shree Ceramics</option><option>Om Tiles Depot</option><option>Bharat Building Supply</option></select></label>
+          <div class="err" id="poErr"></div>
+          <button class="btn" type="submit">Raise request</button>
+          <div class="toast" id="poOk"></div>
+        </form>
+      </div>
+      <p class="note">When an order reaches "Received", its quantity is added to the stock register automatically. Switch to the Inventory tab to see it.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <div class="sec-head reveal"><div class="eyebrow">Pricing</div><h2>Pick a package</h2>
+    <p class="muted">Ordered and paid safely through Fiverr. Not sure which fits? Message me there first.</p></div>
+  <div class="plans">
+    <div class="plan reveal"><h3>Sheet Cleanup</h3><div class="price">$15 <small>· 2 days</small></div>
+      <ul><li>Clean and format one sheet</li><li>Fix broken formulas</li><li>Filters and data validation</li><li>1 revision</li></ul>
+      <a class="btn line" href="https://www.fiverr.com/skhero178" target="_blank" rel="noopener">Order on Fiverr</a></div>
+    <div class="plan pick reveal"><h3>Inventory Tracker</h3><div class="price">$45 <small>· 4 days</small></div>
+      <ul><li>Stock in / out with live balance</li><li>Low-stock and reorder alerts</li><li>Simple dashboard</li><li>2 revisions</li></ul>
+      <a class="btn" href="https://www.fiverr.com/skhero178" target="_blank" rel="noopener">Order on Fiverr</a></div>
+    <div class="plan reveal"><h3>Full Automated System</h3><div class="price">$95 <small>· 7 days</small></div>
+      <ul><li>Everything in Inventory Tracker</li><li>Auto reports or a mobile app</li><li>Purchase-order flow like the demo</li><li>Video walkthrough, 3 revisions</li></ul>
+      <a class="btn line" href="https://www.fiverr.com/skhero178" target="_blank" rel="noopener">Order on Fiverr</a></div>
+  </div>
+  <p class="note">Extras: faster delivery +$10 · extra revision +$5</p>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><div class="eyebrow">Questions</div><h2>Before you order</h2></div>
+  <div class="faq">
+    <details class="reveal"><summary>Do I need to buy any software?</summary><p>No. Google Sheets, Apps Script and AppSheet's free tier are enough for most small businesses.</p></details>
+    <details class="reveal"><summary>Can you work with my existing Excel file?</summary><p>Yes. I can clean it up and move it to Google Sheets, or improve it where it is.</p></details>
+    <details class="reveal"><summary>Is my data safe?</summary><p>I only work on the copy you share and remove my access when the order is done.</p></details>
+    <details class="reveal"><summary>Can my staff use it on their phones?</summary><p>Yes, through the Google Sheets app or a custom AppSheet app in the Full Automated System package.</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Ready to stop counting by hand?</h2>
+  <p>Send your sheet on Fiverr and I'll suggest the right package before you pay.</p>
+  <a class="btn" href="https://www.fiverr.com/skhero178" target="_blank" rel="noopener">Message me on Fiverr</a>
+</div></section>
+<footer><div class="wrap">StockFlow Studio · Sachin · fiverr.com/skhero178 · Demo uses sample data only.</div></footer>
+
+<script>
+(function(){
+  const STEPS=["Request","Approval","PO sent","Dispatched","Received"];
+  const SEED={
+    items:[
+      {n:"Vitrified Tile 600×600",u:"box",q:240,r:80},
+      {n:"Wall Tile 300×450",u:"box",q:64,r:60},
+      {n:"Floor Tile 400×400",u:"box",q:0,r:40},
+      {n:"Tile Adhesive 20 kg",u:"bag",q:35,r:40},
+      {n:"Grout (Grey) 1 kg",u:"pkt",q:150,r:50},
+      {n:"Tile Spacer 3 mm",u:"pkt",q:22,r:30}
+    ],
+    log:[],
+    pos:[
+      {id:"PO-1041",item:"Floor Tile 400×400",qty:200,sup:"Shree Ceramics",s:2,due:-1},
+      {id:"PO-1042",item:"Tile Adhesive 20 kg",qty:100,sup:"Bharat Building Supply",s:1,due:1},
+      {id:"PO-1043",item:"Tile Spacer 3 mm",qty:60,sup:"Om Tiles Depot",s:3,due:2},
+      {id:"PO-1038",item:"Wall Tile 300×450",qty:150,sup:"Om Tiles Depot",s:5,due:0}
+    ],
+    next:1044
+  };
+  const KEY="stockflow-demo-v1";
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const clone=o=>JSON.parse(JSON.stringify(o));
+  const status=i=>i.q<=0?["Out of stock","bad"]:i.q<=i.r?["Reorder","warn"]:["OK","ok"];
+  const pct=i=>Math.max(0,Math.min(100,Math.round(i.q/(i.r*3)*100)));
+  const meter=i=>{const c=status(i)[1];return`<div class="meter"><i class="${c==="ok"?"":c}" style="width:${Math.max(pct(i),c==="bad"?0:4)}%"></i></div>`};
+  const dueTxt=d=>d<0?`<span class="pill bad">${-d}d late</span>`:d===0?`<span class="pill warn">Today</span>`:`<span class="muted">in ${d}d</span>`;
+  function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return clone(SEED)}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+  let st=load(),authed=false,tab="ims";
+  try{authed=sessionStorage.getItem(KEY+"-auth")==="1"}catch(e){}
+
+  // marquee: duplicated once so the -50% loop is seamless
+  const words=["Stock registers","Reorder alerts","Purchase orders","Daily reports","Mobile apps","Excel clean-up","Apps Script","Stock audits"];
+  $("mq").innerHTML=[...words,...words].map(w=>`<span>${w}</span>`).join("");
+
+  // hero mock: same seed data, a fake entry every few seconds
+  const hero=clone(SEED.items);
+  function renderHero(){
+    $("hRows").innerHTML=hero.slice(0,4).map(i=>`<div class="mrow"><span>${esc(i.n)}</span>${meter(i)}<span class="pill ${status(i)[1]}">${i.q}</span></div>`).join("");
+    $("hItems").textContent=hero.length;
+    $("hLow").textContent=hero.filter(i=>i.q>0&&i.q<=i.r).length;
+    $("hOut").textContent=hero.filter(i=>i.q<=0).length;
+  }
+  renderHero();
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    setInterval(()=>{
+      const i=hero[Math.floor(Math.random()*4)],out=i.q>20&&Math.random()<.5,q=out?10+Math.floor(Math.random()*15):20+Math.floor(Math.random()*40);
+      i.q+=out?-q:q;if(i.q>i.r*3)i.q=Math.round(i.r*1.2);
+      $("hTick").innerHTML=`<b class="${out?"o":""}">${out?"−":"+"}${q} ${i.u}</b> ${esc(i.n)} · balance ${i.q}`;
+      renderHero();
+    },2600);
+  }
+
+  function renderIms(){
+    $("stockBody").innerHTML=st.items.map(i=>{const[t,c]=status(i);return`<tr><td>${esc(i.n)}</td><td class="num">${i.q} <span class="muted">${i.u}</span></td><td>${meter(i)}</td><td class="num">${i.r}</td><td><span class="pill ${c}">${t}</span></td></tr>`}).join("");
+    $("kItems").textContent=st.items.length;
+    $("kLow").textContent=st.items.filter(i=>i.q>0&&i.q<=i.r).length;
+    $("kOut").textContent=st.items.filter(i=>i.q<=0).length;
+    const keep=$("mItem").value;
+    $("mItem").innerHTML=st.items.map((i,k)=>`<option value="${k}">${esc(i.n)}</option>`).join("");
+    if(keep)$("mItem").value=keep;
+    $("poItem").innerHTML=st.items.map(i=>`<option>${esc(i.n)}</option>`).join("");
+    $("moveLog").innerHTML=st.log.length?st.log.slice(0,8).map(l=>`<div><span class="${l.d}">${l.d==="in"?"+":"−"}${l.q}</span> ${esc(l.n)}</div>`).join(""):`<span class="muted">No entries yet. Save one above.</span>`;
+  }
+  function renderFms(){
+    $("poBody").innerHTML=st.pos.map((p,k)=>{
+      const done=p.s>=5;
+      const steps=STEPS.map((s,j)=>`<span class="step ${j<p.s?"done":j===p.s?"now":""}">${s}</span>`).join("");
+      return`<tr><td><b>${p.id}</b><div class="muted" style="font-size:12px">${p.qty} × ${esc(p.item)}</div></td><td>${esc(p.sup)}</td><td><div class="steps">${steps}</div></td><td>${done?'<span class="pill ok">Done</span>':dueTxt(p.due)}</td><td>${done?"":`<button class="btn sm" type="button" data-adv="${k}" title="Mark ${STEPS[p.s]} done">✓ ${STEPS[p.s]}</button>`}</td></tr>`}).join("");
+    const open=st.pos.filter(p=>p.s<5);
+    $("fOpen").textContent=open.length;
+    $("fLate").textContent=open.filter(p=>p.due<0).length;
+    $("fDone").textContent=st.pos.length-open.length;
+  }
+  function paint(){
+    $("login").hidden=authed;
+    $("p-ims").hidden=!authed||tab!=="ims";
+    $("p-fms").hidden=!authed||tab!=="fms";
+    $("t-ims").setAttribute("aria-selected",tab==="ims");
+    $("t-fms").setAttribute("aria-selected",tab==="fms");
+    if(authed){renderIms();renderFms()}
+  }
+  // View Transitions API where supported, plain swap otherwise
+  const show=()=>document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches?document.startViewTransition(paint):paint();
+
+  $("t-ims").onclick=()=>{tab="ims";show()};
+  $("t-fms").onclick=()=>{tab="fms";show()};
+  $("fill").onclick=()=>{$("u").value="demo";$("pw").value="demo123";if(authed)return;$("login").requestSubmit()};
+  $("login").addEventListener("submit",e=>{
+    e.preventDefault();
+    if($("u").value.trim().toLowerCase()==="demo"&&$("pw").value==="demo123"){authed=true;try{sessionStorage.setItem(KEY+"-auth","1")}catch(_){}$("loginErr").textContent="";show()}
+    else $("loginErr").textContent="Wrong ID or password. Use demo / demo123.";
+  });
+  document.addEventListener("click",e=>{
+    const t=e.target.closest("button");if(!t)return;
+    if(t.hasAttribute("data-logout")){authed=false;try{sessionStorage.removeItem(KEY+"-auth")}catch(_){}show()}
+    if(t.hasAttribute("data-reset")){st=clone(SEED);save();paint()}
+    if(t.dataset.adv!==undefined){const p=st.pos[+t.dataset.adv];p.s++;p.due=p.s<5?2:0;
+      if(p.s===5){const it=st.items.find(i=>i.n===p.item);if(it){it.q+=p.qty;st.log.unshift({n:it.n,q:p.qty,d:"in"})}}
+      save();renderFms();renderIms()}
+  });
+  $("moveForm").addEventListener("submit",e=>{
+    e.preventDefault();$("moveOk").textContent="";
+    const it=st.items[+$("mItem").value],q=Math.floor(+$("mQty").value),d=document.querySelector('input[name="dir"]:checked').value;
+    if(!(q>0)){$("moveErr").textContent="Enter a quantity of 1 or more.";return}
+    if(d==="out"&&q>it.q){$("moveErr").textContent=`Only ${it.q} ${it.u} in stock. Enter ${it.q} or less.`;return}
+    $("moveErr").textContent="";it.q+=d==="in"?q:-q;st.log.unshift({n:it.n,q,d});save();renderIms();
+    $("moveOk").textContent=`Saved. ${it.n} is now ${it.q} ${it.u}.`;
+  });
+  $("poForm").addEventListener("submit",e=>{
+    e.preventDefault();const q=Math.floor(+$("poQty").value);
+    if(!(q>0)){$("poErr").textContent="Enter a quantity of 1 or more.";return}
+    $("poErr").textContent="";const id="PO-"+st.next++;
+    st.pos.unshift({id,item:$("poItem").value,qty:q,sup:$("poSup").value,s:1,due:1});save();renderFms();
+    $("poOk").textContent=`${id} raised. Next step: Approval.`;
+  });
+  console.assert(status({q:0,r:5})[1]==="bad"&&status({q:5,r:5})[1]==="warn"&&status({q:6,r:5})[1]==="ok","status buckets");
+  paint();
+})();
+</script>
+
+</body>
+</html>

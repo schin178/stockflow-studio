@@ -1,0 +1,16 @@
+# StockFlow Studio
+
+> Inventory management and purchase-order tracking systems for shops, godowns and small businesses, built in Google Sheets, Apps Script and simple web apps. Live stock balance, low-stock reorder alerts, stock in/out and a 5-step PO flow. Try the free demo.
+
+Freelancer: Sachin, India. Orders and payment through Fiverr: https://www.fiverr.com/skhero178
+
+## Services
+- Sheet Cleanup ($15, 2 days): clean and format one sheet, fix formulas, filters and data validation.
+- Inventory Tracker ($45, 4 days): stock in/out with live balance, low-stock and reorder alerts, simple dashboard.
+- Full Automated System ($95, 7 days): Inventory Tracker plus Apps Script auto reports or an AppSheet mobile app, purchase-order flow, video walkthrough.
+
+## Live demo
+- https://schin178.github.io/stockflow-studio/#demo (login: demo / demo123), sample data for a tile shop.
+
+## Tools
+Google Sheets, Google Apps Script, AppSheet, Excel, Python, Flask.
